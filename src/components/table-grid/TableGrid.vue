@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { ref, type Ref, onMounted, type StyleValue } from "vue";
+import type { ICommand } from "@/interfaces/command/ICommand";
+import { BooleanExpression } from "@/models/argument-types/boolean-expression/BooleanExpression";
+import { TableCoordinate } from "@/models/argument-types/table-cordinate/TableCoodinate";
+import { SumifCommand } from "@/models/sumif-command/SumifCommand";
+import { ref, type Ref, onMounted, toRaw } from "vue";
 
 const TABLE_HEADING = [
   "A",
@@ -30,10 +34,42 @@ const TABLE_HEADING = [
   "Z",
 ];
 
+const commands: Array<ICommand> = [
+ new SumifCommand("somase", [
+  new TableCoordinate(TABLE_HEADING),
+  new TableCoordinate(TABLE_HEADING),
+  new TableCoordinate(TABLE_HEADING),
+  new BooleanExpression()
+ ])
+];
+
 const observers: Array<ResizeObserver> = [];
 const columnLabels: Ref<HTMLLabelElement[] | null> = ref(null);
 const columns: Ref<HTMLDivElement[] | null> = ref(null);
-const inputs: Ref<HTMLInputElement | null> = ref(null);
+const inputs: Ref<HTMLInputElement[] | null> = ref(null);
+
+const transformInputIntoCommandInput = (data: Event) => {
+ const target = data.currentTarget as HTMLInputElement;
+ if(target.value.startsWith(">", 0)) {
+  target.classList.add("cmd-prompt");
+  return;
+ }
+ target.classList.remove("cmd-prompt")
+}
+
+const executeCommandPressingEnter = (data: KeyboardEvent) => {
+ const input = data.currentTarget as HTMLInputElement;
+ if(data.key === "Enter" && input.classList.contains("cmd-prompt")) {
+  commands
+   .find((el) => el.getCommandName() === input.value.split("(")[0].substring(1).trim())
+   ?.executeCommand(input.value, toRaw(inputs.value!), TABLE_HEADING);
+ }
+}
+
+const treatInput = (data: Event) => {
+ transformInputIntoCommandInput(data);
+ executeCommandPressingEnter(data as KeyboardEvent);
+}
 
 onMounted(() => {
   columnLabels.value!.forEach((columnLabel, index) => {
@@ -116,5 +152,11 @@ onMounted(() => {
   width: 30px;
   display: grid;
   grid-auto-rows: 22px;
+}
+
+.cmd-prompt {
+  transition: background-color 0.2s ease-in-out;
+  background-color: black;
+  color: white;
 }
 </style>
