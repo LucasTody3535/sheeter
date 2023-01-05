@@ -60,8 +60,9 @@ onMounted(() => {
       v-for="col in TABLE_HEADING.length"
       class="table-column main-column"
     >
-      <label ref="columnLabels" class="cell column-letter">{{ col }}</label>
-      <input ref="inputs" :data-col="col" :data-row="row" v-for="row in TABLE_HEADING.length" class="cell-input" type="text" />
+      <label ref="columnLabels" class="cell column-letter">{{ TABLE_HEADING[col - 1] }}</label>
+      <input @keyup="treatInput"
+	ref="inputs" :data-cell="`${TABLE_HEADING[col - 1]}${row}`" v-for="row in TABLE_HEADING.length" class="cell-input" type="text" />
     </div>
   </div>
 </template>
@@ -74,7 +75,7 @@ onMounted(() => {
 
 #table .table-column {
   /* width: 80px; */
-  height: 100%;
+  height: calc(27 * 22px);
   flex-shrink: 0;
 }
 
