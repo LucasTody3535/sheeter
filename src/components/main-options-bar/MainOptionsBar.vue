@@ -1,8 +1,10 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+ import CSVImport from '../csv-import/CSVImport.vue';
+</script>
 
 <template>
   <div id="main-options-container">
-    <i class="ri-file-add-line"></i>
+    <CSVImport/>
     <i class="ri-file-download-line"></i>
   </div>
 </template>
