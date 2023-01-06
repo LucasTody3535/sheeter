@@ -3,36 +3,11 @@ import type { ICommand } from "@/interfaces/command/ICommand";
 import { BooleanExpression } from "@/models/argument-types/boolean-expression/BooleanExpression";
 import { TableCoordinate } from "@/models/argument-types/table-cordinate/TableCoodinate";
 import { SumifCommand } from "@/models/sumif-command/SumifCommand";
-import { ref, type Ref, onMounted, toRaw } from "vue";
+import { LETTERS } from "@/static/letters/static-letters";
+import { TableColumnsNewDataKey } from "@/static/symbols/static-symbols";
+import { ref, type Ref, onMounted, toRaw, inject, watch } from "vue";
 
-const TABLE_HEADING = [
-  "A",
-  "B",
-  "C",
-  "D",
-  "E",
-  "F",
-  "G",
-  "H",
-  "I",
-  "J",
-  "K",
-  "L",
-  "M",
-  "N",
-  "O",
-  "P",
-  "Q",
-  "R",
-  "S",
-  "T",
-  "U",
-  "V",
-  "W",
-  "X",
-  "Y",
-  "Z",
-];
+const TABLE_HEADING = LETTERS;
 
 const commands: Array<ICommand> = [
  new SumifCommand("somase", [
@@ -42,6 +17,8 @@ const commands: Array<ICommand> = [
   new BooleanExpression()
  ])
 ];
+
+let tableColumnsData = inject(TableColumnsNewDataKey);
 
 const observers: Array<ResizeObserver> = [];
 const columnLabels: Ref<HTMLLabelElement[] | null> = ref(null);
@@ -82,6 +59,16 @@ onMounted(() => {
     );
     observers[index].observe(columnLabel);
   });
+});
+
+watch(tableColumnsData!.getTableValues, (columns) => {
+ let inputsColumn: Array<HTMLInputElement> = []; 
+ columns.forEach((column) => {
+  inputsColumn = inputs.value!.filter((input) => (input.dataset.cell as string).includes(column.column));
+  column.values.forEach((value, index) => {
+   inputsColumn[index].value = value;
+  });
+ });
 });
 </script>
 
