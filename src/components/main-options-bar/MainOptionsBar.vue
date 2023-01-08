@@ -1,11 +1,12 @@
 <script setup lang="ts">
+ import CSVExport from '../csv-export/CSVExport.vue';
  import CSVImport from '../csv-import/CSVImport.vue';
 </script>
 
 <template>
   <div id="main-options-container">
     <CSVImport/>
-    <i class="ri-file-download-line"></i>
+    <CSVExport/>
   </div>
 </template>
 
