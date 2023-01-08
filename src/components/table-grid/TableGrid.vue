@@ -4,7 +4,7 @@ import { BooleanExpression } from "@/models/argument-types/boolean-expression/Bo
 import { TableCoordinate } from "@/models/argument-types/table-cordinate/TableCoodinate";
 import { SumifCommand } from "@/models/sumif-command/SumifCommand";
 import { LETTERS } from "@/static/letters/static-letters";
-import { TableColumnsNewDataKey } from "@/static/symbols/static-symbols";
+import { TableCellsKey, TableColumnsNewDataKey } from "@/static/symbols/static-symbols";
 import { ref, type Ref, onMounted, toRaw, inject, watch } from "vue";
 
 const TABLE_HEADING = LETTERS;
@@ -19,6 +19,7 @@ const commands: Array<ICommand> = [
 ];
 
 let tableColumnsData = inject(TableColumnsNewDataKey);
+let tableCells = inject(TableCellsKey);
 
 const observers: Array<ResizeObserver> = [];
 const columnLabels: Ref<HTMLLabelElement[] | null> = ref(null);
@@ -59,10 +60,12 @@ onMounted(() => {
     );
     observers[index].observe(columnLabel);
   });
+  tableCells!.changeCells(inputs.value!);
 });
 
 watch(tableColumnsData!.getTableValues, (columns) => {
- let inputsColumn: Array<HTMLInputElement> = []; 
+ let inputsColumn: Array<HTMLInputElement> = [];
+ inputs.value?.forEach(input => input.value = "");
  columns.forEach((column) => {
   inputsColumn = inputs.value!.filter((input) => (input.dataset.cell as string).includes(column.column));
   column.values.forEach((value, index) => {
