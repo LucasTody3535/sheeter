@@ -1,46 +1,64 @@
-# sheeter
+# Sheeter
 
-This template should help get you started developing with Vue 3 in Vite.
+> This project is for study purposes only!
 
-## Recommended IDE Setup
+Sheeter is an Excel like application, made with Vue 3, Vite and Typescript
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## Features
 
-## Type Support for `.vue` Imports in TS
+- Cells text positioning
+	+ Cell selection
+	+ Multiple cells selection
+- Cells functions like *sumif* for example
+- Export as csv
+- Import as csv
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+## List of supported commands
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+> The commando will only be executed if you use an ">" when calling the command, ex: sumif(A1, A5, > 5, A9)
 
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+> The commands are in portuguese
 
-## Customize configuration
+- somase: Makes a sum with given cells values that attend some condition and output it to another cell
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+	Ex: 
+	
+	\> somase(A1, A8, > 100, B1)
+	
+	The command above will sum values of cells A1 to A8 that are above 100, then the result will be showed in cell B1
 
-## Project Setup
+## How to run
 
-```sh
-npm install
+### Requirements
+
+- Nodejs & NPM
+- Git
+- System that supports unix like paths("/")
+
+### Steps
+
+First of all, you need to download the code, it will be downloaded to the directory where you executed the command below
+
+``` bash
+git clone https://github.com/LucasTody3535/sheeter.git
 ```
 
-### Compile and Hot-Reload for Development
+Now you move inside the the downloaded code
 
-```sh
+``` bash
+cd sheeter
+```
+
+Install the dependencies
+
+``` bash
+npm i
+```
+
+Run in development mode
+
+``` bash
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+The url to access it will be showed in the terminal, copy/paste the url in the search bar of a browser and click enter, now test it :D
