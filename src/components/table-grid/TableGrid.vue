@@ -4,7 +4,7 @@ import { BooleanExpression } from "@/models/argument-types/boolean-expression/Bo
 import { TableCoordinate } from "@/models/argument-types/table-cordinate/TableCoodinate";
 import { SumifCommand } from "@/models/sumif-command/SumifCommand";
 import { LETTERS } from "@/static/letters/static-letters";
-import { TableCellsKey, TableColumnsNewDataKey } from "@/static/symbols/static-symbols";
+import { SelectedTableCell, SelectedTableColumn, TableCellsKey, TableColumnsNewDataKey } from "@/static/symbols/static-symbols";
 import { ref, type Ref, onMounted, toRaw, inject, watch } from "vue";
 
 const TABLE_HEADING = LETTERS;
@@ -20,6 +20,8 @@ const commands: Array<ICommand> = [
 
 let tableColumnsData = inject(TableColumnsNewDataKey);
 let tableCells = inject(TableCellsKey);
+let selectedTableCell = inject(SelectedTableCell);
+let selectedTableColumn = inject(SelectedTableColumn);
 
 const observers: Array<ResizeObserver> = [];
 const columnLabels: Ref<HTMLLabelElement[] | null> = ref(null);
@@ -47,6 +49,36 @@ const executeCommandPressingEnter = (data: KeyboardEvent) => {
 const treatInput = (data: Event) => {
  transformInputIntoCommandInput(data);
  executeCommandPressingEnter(data as KeyboardEvent);
+}
+
+  const unselectSelectedTableColumn = () => {
+    selectedTableColumn!.getValue.value?.forEach(columnItem => columnItem.classList.remove("input-is-focused"));
+    selectedTableColumn!.updateValue(null);
+  }
+  const unselectSelectedTableCell = () => {
+   selectedTableCell!.getValue.value?.classList.remove("input-is-focused");
+   selectedTableCell!.updateValue(null);
+  }
+  const updateSelectedTableCell = (input: HTMLInputElement) => {
+   input.classList.add("input-is-focused");
+   selectedTableCell!.updateValue(input);
+  }
+  const updateSelectedTableColumn = (inputs: Array<HTMLInputElement>) => {
+   inputs.forEach(input => input.classList.add("input-is-focused"));
+   selectedTableColumn!.updateValue(inputs);
+  }
+
+const treatInputFocus = (data: Event) => {
+ unselectSelectedTableCell();
+ updateSelectedTableCell(data.currentTarget as HTMLInputElement);
+ unselectSelectedTableColumn();
+}
+
+const treatColumnSelection = (data: Event) => {
+ unselectSelectedTableCell();
+ unselectSelectedTableColumn();
+ updateSelectedTableColumn(inputs.value!.filter(input => input.dataset.cell!
+			    .includes((data.currentTarget as HTMLParagraphElement).innerText)));
 }
 
 onMounted(() => {
@@ -86,8 +118,8 @@ watch(tableColumnsData!.getTableValues, (columns) => {
       v-for="col in TABLE_HEADING.length"
       class="table-column main-column"
     >
-      <label ref="columnLabels" class="cell column-letter">{{ TABLE_HEADING[col - 1] }}</label>
-      <input @keyup="treatInput"
+      <label @click="treatColumnSelection" ref="columnLabels" class="cell column-letter">{{ TABLE_HEADING[col - 1] }}</label>
+      <input @keyup="treatInput" @focus="treatInputFocus"
 	ref="inputs" :data-cell="`${TABLE_HEADING[col - 1]}${row}`" v-for="row in TABLE_HEADING.length" class="cell-input" type="text" />
     </div>
   </div>
@@ -115,6 +147,8 @@ watch(tableColumnsData!.getTableValues, (columns) => {
   border: none;
   border-bottom: 1px solid gray;
   border-left: 1px solid gray;
+  padding-left: 2px !important;
+  padding-right: 2px !important;
 }
 
 #table .main-column input.cell-input:focus {
@@ -126,6 +160,7 @@ watch(tableColumnsData!.getTableValues, (columns) => {
   overflow: auto;
   resize: horizontal;
   min-width: 80px;
+  cursor: pointer;
 }
 
 #table .table-column .cell {
@@ -146,7 +181,11 @@ watch(tableColumnsData!.getTableValues, (columns) => {
 
 .cmd-prompt {
   transition: background-color 0.2s ease-in-out;
-  background-color: black;
+  background-color: black !important;
   color: white;
+}
+
+.input-is-focused {
+ background-color: #9d8dd9;
 }
 </style>
