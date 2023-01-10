@@ -62,3 +62,12 @@ npm run dev
 ```
 
 The url to access it will be showed in the terminal, copy/paste the url in the search bar of a browser and click enter, now test it :D
+
+## Screenshots
+
+![](https://raw.githubusercontent.com/LucasTody3535/projects-screenshots/main/sheeter/pic1.png)
+![](https://raw.githubusercontent.com/LucasTody3535/projects-screenshots/main/sheeter/pic2.png)
+![](https://raw.githubusercontent.com/LucasTody3535/projects-screenshots/main/sheeter/pic3.png)
+![](https://raw.githubusercontent.com/LucasTody3535/projects-screenshots/main/sheeter/pic4.png)
+![](https://raw.githubusercontent.com/LucasTody3535/projects-screenshots/main/sheeter/pic5.png)
+![](https://raw.githubusercontent.com/LucasTody3535/projects-screenshots/main/sheeter/pic6.png)
