@@ -81,6 +81,14 @@ const treatColumnSelection = (data: Event) => {
 			    .includes((data.currentTarget as HTMLParagraphElement).innerText)));
 }
 
+const treatColumnSelectionBasedOnRowNumber = (data: Event) => {
+ unselectSelectedTableCell();
+ console.log(inputs.value![0].dataset.cell!.substring(1))
+ unselectSelectedTableColumn();
+ updateSelectedTableColumn(inputs.value!.filter(input => input.dataset.cell!
+			    .substring(1) === (data.currentTarget as HTMLParagraphElement).innerText))
+}
+
 onMounted(() => {
   columnLabels.value!.forEach((columnLabel, index) => {
     observers.push(
@@ -111,7 +119,7 @@ watch(tableColumnsData!.getTableValues, (columns) => {
   <div id="table">
     <div class="table-column" id="row-numbers">
       <p class="cell"></p>
-      <p class="cell" v-for="n in TABLE_HEADING.length">{{ n }}</p>
+      <p @click="treatColumnSelectionBasedOnRowNumber" class="cell row-heading" v-for="n in TABLE_HEADING.length">{{ n }}</p>
     </div>
     <div
       ref="columns"
@@ -135,6 +143,10 @@ watch(tableColumnsData!.getTableValues, (columns) => {
   /* width: 80px; */
   height: calc(27 * 22px);
   flex-shrink: 0;
+}
+
+#table .row-heading {
+ cursor: pointer;
 }
 
 #table .main-column {
